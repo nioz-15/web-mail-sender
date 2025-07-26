@@ -14,7 +14,12 @@ import os
 from typing import Dict, List, Any, Optional
 from flask import session
 
-# dummyConfiguration
+# aws dummy Configuration
+AWS_SES_CONFIG = {
+    'aws_access_key_id': 'test_access_key',
+    'aws_secret_access_key': 'test_secret',
+    'region_name': 'test_region'
+}
 
 
 # Provider configurations for DLP (SMTP-based)
