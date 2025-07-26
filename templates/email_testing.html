@@ -1,0 +1,2732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Security Testing Platform - Enhanced</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary-color: #64748b;
+            --accent-color: #f59e0b;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --background: #f8fafc;
+            --card-bg: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        /* Session Bar */
+        .session-bar {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 12px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .session-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .role-badge {
+            background: linear-gradient(135deg, #3b82f6, #60a5fa);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .role-badge.admin {
+            background: linear-gradient(135deg, #10b981, #34d399);
+        }
+
+        .usage-info {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .usage-info.warning {
+            background: rgba(245, 158, 11, 0.8);
+            color: white;
+        }
+
+        .usage-info.danger {
+            background: rgba(239, 68, 68, 0.8);
+            color: white;
+        }
+
+        .session-timer {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .navigation {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .logout-btn {
+            background: rgba(239, 68, 68, 0.8);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .logout-btn:hover {
+            background: rgba(239, 68, 68, 1);
+            transform: translateY(-1px);
+        }
+
+        .header-section {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 30px;
+            color: white;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .header-subtitle {
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Form Wrapper */
+        .form-wrapper {
+            background: var(--card-bg);
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+
+        .form-header {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            padding: 30px 40px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .form-header h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .form-content {
+            padding: 40px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .form-section {
+            background: #f8fafc;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 30px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .form-section:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.1);
+            transform: translateY(-2px);
+        }
+
+        .form-section.active {
+            border-color: var(--primary-color);
+            background: #f0f9ff;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .section-icon {
+            width: 24px;
+            height: 24px;
+            color: var(--primary-color);
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 14px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.2s ease;
+            background: white;
+            color: var(--text-primary);
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .radio-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .radio-option {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px;
+            background: white;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .radio-option:hover {
+            border-color: var(--primary-color);
+            background: #f0f9ff;
+            transform: translateY(-1px);
+        }
+
+        .radio-option:has(input[type="radio"]:checked) {
+            border-color: var(--primary-color);
+            background: #f0f9ff;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+        }
+
+        .radio-option input[type="radio"] {
+            accent-color: var(--primary-color);
+            margin: 0;
+        }
+
+        .radio-option label {
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 8px;
+            transition: background-color 0.2s ease;
+        }
+
+        .checkbox-group:hover {
+            background: rgba(37, 99, 235, 0.05);
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary-color);
+            cursor: pointer;
+        }
+
+        .checkbox-group label {
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        /* DLP Section */
+        .dlp-section {
+            display: none;
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border: 2px solid #f59e0b;
+            grid-column: 1 / -1;
+        }
+
+        .dlp-section.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .warning-box {
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border: 1px solid #f59e0b;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: start;
+            gap: 12px;
+        }
+
+        .warning-box i {
+            color: #f59e0b;
+            margin-top: 2px;
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+            border: 1px solid var(--primary-color);
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 12px;
+            font-size: 0.9rem;
+            color: #1e40af;
+            display: none;
+        }
+
+        .info-box.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        .content-type-group {
+            display: none;
+        }
+
+        .content-type-group.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        .file-type-group {
+            display: none;
+        }
+
+        .file-type-group.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        /* Multiple Files Configuration */
+        .multiple-files-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .btn-add-file {
+            background: linear-gradient(135deg, var(--success-color), #34d399);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-add-file:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        .files-list {
+            max-height: 400px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+
+        .file-item {
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 15px;
+            position: relative;
+            transition: all 0.2s ease;
+        }
+
+        .file-item:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+        }
+
+        .file-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .file-item-title {
+            font-weight: 600;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-remove-file {
+            background: var(--danger-color);
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-remove-file:hover {
+            background: #dc2626;
+            transform: translateY(-1px);
+        }
+
+        .file-item-config {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .file-item-options {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .file-item-options .checkbox-group {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 8px 12px;
+            margin-bottom: 0;
+        }
+
+        .global-archive-options {
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border: 1px solid var(--primary-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+
+        .global-archive-options .checkbox-group {
+            background: white;
+            border: 1px solid rgba(37, 99, 235, 0.2);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 12px;
+        }
+
+        .global-archive-options .checkbox-group:hover {
+            background: #f8fafc;
+        }
+
+        .global-archive-options .checkbox-group label {
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
+        /* Buttons */
+        .action-section {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: var(--shadow-lg);
+            margin-bottom: 30px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 16px 32px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-decoration: none;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--secondary-color), #475569);
+            color: white;
+            box-shadow: 0 4px 15px rgba(100, 116, 139, 0.3);
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(100, 116, 139, 0.4);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, var(--danger-color), #dc2626);
+            color: white;
+            box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3);
+        }
+
+        .btn-danger:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(239, 68, 68, 0.4);
+        }
+
+        /* Progress Section */
+        .progress-section {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: var(--shadow-lg);
+            margin-bottom: 30px;
+            display: none;
+        }
+
+        .progress-section.show {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        .progress-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+            color: var(--primary-color);
+        }
+
+        .progress-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 12px;
+            background: #e2e8f0;
+            border-radius: 6px;
+            overflow: hidden;
+            margin-bottom: 24px;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--success-color), #34d399);
+            width: 0%;
+            transition: width 0.3s ease;
+            border-radius: 6px;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%);
+            }
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        .logs-container {
+            background: #1e293b;
+            border-radius: 12px;
+            padding: 20px;
+            font-family: 'Fira Code', 'Monaco', monospace;
+            font-size: 14px;
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #334155;
+        }
+
+        .log-entry {
+            margin-bottom: 4px;
+            padding: 4px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .log-entry:last-child {
+            border-bottom: none;
+        }
+
+        .log-success {
+            color: #10b981;
+        }
+
+        .log-error {
+            color: #ef4444;
+        }
+
+        .log-info {
+            color: #3b82f6;
+        }
+
+        /* Alert Messages */
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            color: #065f46;
+            border: 1px solid var(--success-color);
+        }
+
+        .alert-error {
+            background: linear-gradient(135deg, #fee2e2, #fecaca);
+            color: #991b1b;
+            border: 1px solid var(--danger-color);
+        }
+
+        .alert-warning {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            color: #92400e;
+            border: 1px solid var(--warning-color);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .system-info {
+            background: #e0f2fe;
+            border: 1px solid #0288d1;
+            border-radius: 8px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            color: #01579b;
+        }
+
+        .system-info i {
+            color: #0288d1;
+            margin-right: 8px;
+        }
+
+        .tooltip {
+            position: relative;
+            cursor: help;
+        }
+
+        .tooltip::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1e293b;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
+            z-index: 1000;
+        }
+
+        .tooltip:hover::after {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(-4px);
+        }
+
+        /* Preview Section */
+        .preview-section {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e0f2fe 100%);
+            border: 2px solid var(--primary-color);
+        }
+
+        .preview-card {
+            background: white;
+            border-radius: 8px;
+            padding: 16px;
+            margin-bottom: 16px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .preview-label {
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .preview-content {
+            background: #f8fafc;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            border: 1px solid #e2e8f0;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 16px;
+            }
+
+            .header-section {
+                padding: 30px 20px;
+            }
+
+            .header-title {
+                font-size: 2rem;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .form-content {
+                padding: 24px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .radio-group {
+                grid-template-columns: 1fr;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn {
+                justify-content: center;
+            }
+
+            .session-bar {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .file-item-config {
+                grid-template-columns: 1fr;
+            }
+
+            .file-item-options {
+                flex-direction: column;
+            }
+
+            .multiple-files-header {
+                flex-direction: column;
+                gap: 10px;
+                align-items: stretch;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="main-container">
+    <!-- Session Bar -->
+    <div class="session-bar">
+        <div class="session-info">
+            <span><i class="fas fa-user"></i> Logged in as: <strong id="currentUser">Loading...</strong></span>
+            <span id="userRole" class="role-badge">
+                    <i class="fas fa-user"></i>
+                    Loading...
+                </span>
+            <div class="usage-info" id="usageInfo">
+                <i class="fas fa-paper-plane"></i> Messages: <span id="messageUsage">0</span>/<span
+                    id="messageLimit">0</span>
+            </div>
+            <div class="session-timer" id="sessionTimer">
+                <i class="fas fa-clock"></i> Session expires in: <span id="timeRemaining">5:00</span>
+            </div>
+        </div>
+        <button class="logout-btn" onclick="logout()">
+            <i class="fas fa-sign-out-alt"></i>
+            Logout
+        </button>
+    </div>
+
+    <!-- Navigation -->
+    <div class="navigation">
+        <a href="/email-testing/dashboard" class="nav-btn">
+            <i class="fas fa-arrow-left"></i>
+            Dashboard
+        </a>
+        <a href="/" class="nav-btn">
+            <i class="fas fa-home"></i>
+            BDD Dashboard
+        </a>
+        <a href="/navigation" class="nav-btn">
+            <i class="fas fa-compass"></i>
+            Platform Hub
+        </a>
+    </div>
+
+    <!-- Header -->
+    <header class="header-section">
+        <div class="header-content">
+            <h1 class="header-title">
+                <i class="fas fa-shield-alt"></i>
+                Email Security Testing Platform
+            </h1>
+            <p class="header-subtitle">Advanced Threat Simulation & Security Validation</p>
+        </div>
+    </header>
+
+    <!-- Alert Container -->
+    <div id="alertContainer"></div>
+
+    <!-- System Info Container -->
+    <div id="systemInfoContainer"></div>
+
+    <!-- Form Wrapper -->
+    <div class="form-wrapper">
+        <div class="form-header">
+            <h2>
+                <i class="fas fa-cog"></i>
+                Email Campaign Configuration
+            </h2>
+        </div>
+
+        <div class="form-content">
+            <form id="emailForm">
+                <div class="form-grid">
+                    <!-- Recipients Section -->
+                    <div class="form-section" id="recipientsSection">
+                        <div class="section-header">
+                            <i class="fas fa-users section-icon"></i>
+                            <h3 class="section-title">Recipients</h3>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="toRecipients" class="form-label">
+                                To Recipients <span style="color: var(--danger-color);">*</span>
+                            </label>
+                            <textarea id="toRecipients" class="form-textarea"
+                                      placeholder="Enter email addresses separated by commas&#10;example@domain.com, test@company.com"
+                                      required></textarea>
+                        </div>
+
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="enableCC">
+                            <label for="enableCC">Add CC Recipients</label>
+                        </div>
+
+                        <div class="form-group" id="ccGroup" style="display: none;">
+                            <label for="ccRecipients" class="form-label">CC Recipients</label>
+                            <textarea id="ccRecipients" class="form-textarea"
+                                      placeholder="CC email addresses separated by commas"></textarea>
+                        </div>
+
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="enableBCC">
+                            <label for="enableBCC">Add BCC Recipients</label>
+                        </div>
+
+                        <div class="form-group" id="bccGroup" style="display: none;">
+                            <label for="bccRecipients" class="form-label">BCC Recipients</label>
+                            <textarea id="bccRecipients" class="form-textarea"
+                                      placeholder="BCC email addresses separated by commas"></textarea>
+                        </div>
+                    </div>
+
+                    <!-- Threat Configuration -->
+                    <div class="form-section" id="threatSection">
+                        <div class="section-header">
+                            <i class="fas fa-exclamation-triangle section-icon"></i>
+                            <h3 class="section-title">Threat Configuration</h3>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="threatType" class="form-label">
+                                Threat Type <span style="color: var(--danger-color);">*</span>
+                            </label>
+                            <select id="threatType" class="form-select" required>
+                                <option value="">Select Threat Type</option>
+                                <option value="malware">🦠 Malware</option>
+                                <option value="clean">✅ Clean File</option>
+                                <option value="phishing">🎣 Phishing Links</option>
+                                <option value="ctp">🔗 Click-Time Protection (CTP)</option>
+                                <option value="spam">📧 Spam</option>
+                                <option value="dlp">🔒 Data Loss Prevention</option>
+                            </select>
+                            <div id="threatInfo" class="info-box"></div>
+                        </div>
+
+                        <div class="form-group content-type-group" id="contentTypeGroup">
+                            <label for="contentType" class="form-label">
+                                Content Type <span style="color: var(--danger-color);">*</span>
+                            </label>
+                            <select id="contentType" class="form-select" required>
+                                <option value="">Select Content Type</option>
+                            </select>
+                            <div id="contentTypeInfo" class="info-box"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                Threat Location <span style="color: var(--danger-color);">*</span>
+                            </label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" id="locationSubject" name="threatLocation" value="subject"
+                                           required>
+                                    <label for="locationSubject">📧 Subject</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="locationBody" name="threatLocation" value="body" required>
+                                    <label for="locationBody">📝 Email Body</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="locationAttachment" name="threatLocation" value="attachment"
+                                           required>
+                                    <label for="locationAttachment">📎 Attachment</label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- File Type Configuration -->
+                        <div class="form-group file-type-group" id="fileTypeGroup">
+                            <label class="form-label">Attachment Configuration</label>
+
+                            <div class="radio-group" style="margin-bottom: 20px;">
+                                <div class="radio-option">
+                                    <input type="radio" id="singleFile" name="attachmentMode" value="single" checked>
+                                    <label for="singleFile">📄 Single File</label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="multipleFiles" name="attachmentMode" value="multiple">
+                                    <label for="multipleFiles">📁 Multiple Files</label>
+                                </div>
+                            </div>
+
+                            <!-- Single File Configuration -->
+                            <div id="singleFileConfig">
+                                <div class="form-group">
+                                    <label for="fileType" class="form-label">File Type</label>
+                                    <select id="fileType" class="form-select">
+                                        <option value="pdf">📄 PDF Document</option>
+                                        <option value="word">📝 Word Document</option>
+                                        <option value="excel">📊 Excel Spreadsheet</option>
+                                        <option value="txt">📋 Text File</option>
+                                        <option value="zip">🗜️ ZIP Archive</option>
+                                    </select>
+                                </div>
+
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="encryptFile">
+                                    <label for="encryptFile">
+                                        <i class="fas fa-lock"></i>
+                                        Encrypt File
+                                        <i class="fas fa-info-circle tooltip"
+                                           data-tooltip="Password protect the generated file"></i>
+                                    </label>
+                                </div>
+
+                                <div class="checkbox-group">
+                                    <input type="checkbox" id="compressFile">
+                                    <label for="compressFile">
+                                        <i class="fas fa-compress"></i>
+                                        Compress File
+                                        <i class="fas fa-info-circle tooltip"
+                                           data-tooltip="Compress the file into an archive"></i>
+                                    </label>
+                                </div>
+
+                                <div class="form-group" id="compressionTypeGroup" style="display: none;">
+                                    <label for="compressionType" class="form-label">Compression Type</label>
+                                    <select id="compressionType" class="form-select">
+                                        <option value="zip">🗜️ ZIP Archive</option>
+                                        <option value="rar">📦 RAR Archive</option>
+                                        <option value="ace">📁 ACE Archive</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Multiple Files Configuration -->
+                            <div id="multipleFilesConfig" style="display: none;">
+                                <div class="multiple-files-header">
+                                    <h4 style="margin-bottom: 15px; color: var(--text-primary);">
+                                        <i class="fas fa-files"></i> Files Configuration
+                                    </h4>
+                                    <button type="button" class="btn-add-file" id="addFileBtn">
+                                        <i class="fas fa-plus"></i> Add File
+                                    </button>
+                                </div>
+
+                                <div id="filesList" class="files-list">
+                                    <!-- Files will be added here dynamically -->
+                                </div>
+
+                                <!-- Global Archive Options -->
+                                <div class="global-archive-options">
+                                    <h5 style="margin-bottom: 15px; color: var(--text-primary); border-bottom: 1px solid #e2e8f0; padding-bottom: 8px;">
+                                        <i class="fas fa-archive"></i> Archive Options
+                                    </h5>
+
+                                    <div class="checkbox-group">
+                                        <input type="checkbox" id="compressAllFiles">
+                                        <label for="compressAllFiles">
+                                            <i class="fas fa-compress-arrows-alt"></i>
+                                            Compress All Files Together
+                                            <i class="fas fa-info-circle tooltip"
+                                               data-tooltip="Create a single archive containing all files"></i>
+                                        </label>
+                                    </div>
+
+                                    <div class="form-group" id="globalCompressionTypeGroup" style="display: none;">
+                                        <label for="globalCompressionType" class="form-label">Archive Compression
+                                            Type</label>
+                                        <select id="globalCompressionType" class="form-select">
+                                            <option value="zip">🗜️ ZIP Archive</option>
+                                            <option value="rar">📦 RAR Archive</option>
+                                            <option value="ace">📁 ACE Archive</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="checkbox-group">
+                                        <input type="checkbox" id="encryptFinalArchive">
+                                        <label for="encryptFinalArchive">
+                                            <i class="fas fa-shield-alt"></i>
+                                            Encrypt Final Archive
+                                            <i class="fas fa-info-circle tooltip"
+                                               data-tooltip="Password protect the final archive containing all files"></i>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DLP Configuration -->
+                    <div class="form-section dlp-section" id="dlpSection">
+                        <div class="section-header">
+                            <i class="fas fa-shield-alt section-icon"></i>
+                            <h3 class="section-title">DLP Testing Configuration</h3>
+                        </div>
+
+                        <div class="warning-box">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <div>
+                                <strong>DLP Testing Types:</strong><br>
+                                <strong>Incoming DLP:</strong> Tests detection of threats coming INTO your organization
+                                (can use any sender)<br>
+                                <strong>Outgoing DLP:</strong> Tests prevention of data leaving your organization
+                                (requires organizational sender)
+                            </div>
+                        </div>
+
+                        <!-- DLP Direction Selection -->
+                        <div class="form-group">
+                            <label class="form-label">
+                                DLP Testing Direction <span style="color: var(--danger-color);">*</span>
+                            </label>
+                            <div class="radio-group">
+                                <div class="radio-option">
+                                    <input type="radio" id="dlpIncoming" name="dlpDirection" value="incoming" checked>
+                                    <label for="dlpIncoming">
+                                        <i class="fas fa-arrow-down"></i>
+                                        Incoming DLP
+                                    </label>
+                                </div>
+                                <div class="radio-option">
+                                    <input type="radio" id="dlpOutgoing" name="dlpDirection" value="outgoing">
+                                    <label for="dlpOutgoing">
+                                        <i class="fas fa-arrow-up"></i>
+                                        Outgoing DLP
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Direction-specific information -->
+                        <div id="dlpIncomingInfo" class="info-box show">
+                            <strong>Incoming DLP Testing:</strong><br>
+                            • Tests your organization's ability to detect threats in incoming emails<br>
+                            • Can use AWS SES sender (external threat simulation)<br>
+                            • Tests: Malware detection, sensitive data recognition, phishing identification
+                        </div>
+
+                        <div id="dlpOutgoingInfo" class="info-box" style="display: none;">
+                            <strong>Outgoing DLP Testing:</strong><br>
+                            • Tests your organization's ability to prevent data leakage<br>
+                            • REQUIRES organizational SMTP sender credentials<br>
+                            • Tests: Data loss prevention policies, sensitive data blocking, compliance enforcement
+                        </div>
+
+                        <!-- Organizational Sender Configuration (only for outgoing) -->
+                        <div id="dlpSenderConfig" style="display: none;">
+                            <div class="warning-box">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <div>
+                                    <strong>Outgoing DLP Requirements:</strong><br>
+                                    • Must use valid organizational email credentials<br>
+                                    • SMTP authentication must be enabled for your tenant<br>
+                                    • Contact IT if you get "SmtpClientAuthentication is disabled" errors
+                                </div>
+                            </div>
+
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="dlpSenderEmail" class="form-label">
+                                        Organizational Email <span style="color: var(--danger-color);">*</span>
+                                    </label>
+                                    <input type="email" id="dlpSenderEmail" class="form-input"
+                                           placeholder="your-email@company.com">
+                                    <small style="color: var(--text-secondary); font-size: 0.85rem;">
+                                        Must be from your organization's domain
+                                    </small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="dlpSenderPassword" class="form-label">
+                                        Password or App Password <span style="color: var(--danger-color);">*</span>
+                                    </label>
+                                    <input type="password" id="dlpSenderPassword" class="form-input"
+                                           placeholder="Use app password if 2FA enabled">
+                                    <small style="color: var(--text-secondary); font-size: 0.85rem;">
+                                        Recommended: Generate app password for security
+                                    </small>
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="dlpProvider" class="form-label">Email Provider</label>
+                                    <select id="dlpProvider" class="form-select">
+                                        <option value="microsoft">🏢 Microsoft 365</option>
+                                        <option value="google">🌐 Google Workspace</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- SMTP Test Button -->
+                            <div style="margin-top: 20px;">
+                                <button type="button" class="btn btn-secondary" id="testSmtpBtn">
+                                    <i class="fas fa-check-circle"></i>
+                                    Test SMTP Connection
+                                </button>
+                                <small style="color: var(--text-secondary); margin-left: 10px;">
+                                    Verify credentials before sending
+                                </small>
+                            </div>
+                        </div>
+
+                        <!-- SES Fallback Notice (for incoming) -->
+                        <div id="dlpSesNotice" class="info-box show">
+                            <i class="fas fa-cloud"></i>
+                            <strong>Using AWS SES for Incoming DLP Testing:</strong><br>
+                            Emails will be sent from <code>eml_sender@avtestqa.com</code> to simulate external threats.
+                            The DLP content (sensitive data, attachments) remains the same.
+                        </div>
+                    </div>
+
+                    <!-- Sending Configuration -->
+                    <div class="form-section" id="sendingSection">
+                        <div class="section-header">
+                            <i class="fas fa-paper-plane section-icon"></i>
+                            <h3 class="section-title">Sending Configuration</h3>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="messageCount" class="form-label">
+                                Number of Messages
+                                <i class="fas fa-info-circle tooltip" data-tooltip="Number of test emails to send"></i>
+                            </label>
+                            <input type="number" id="messageCount" class="form-input" value="1" min="1" max="1000">
+                            <small style="color: var(--text-secondary); font-size: 0.85rem;">
+                                For testing purposes. Maximum: 1000 messages
+                            </small>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="delayBetween" class="form-label">
+                                Delay Between Messages (seconds)
+                                <i class="fas fa-info-circle tooltip"
+                                   data-tooltip="Delay between each email to avoid rate limiting"></i>
+                            </label>
+                            <input type="number" id="delayBetween" class="form-input" value="1" min="0" max="60"
+                                   step="0.1">
+                        </div>
+
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="enableThreading" checked>
+                            <label for="enableThreading">
+                                Enable Multi-threading
+                                <i class="fas fa-info-circle tooltip"
+                                   data-tooltip="Recommended for sending more than 10 messages"></i>
+                            </label>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="threadCount" class="form-label">Thread Count</label>
+                            <input type="number" id="threadCount" class="form-input" value="5" min="1" max="20">
+                        </div>
+                    </div>
+
+                    <!-- Preview Section -->
+                    <div class="form-section preview-section" id="previewSection">
+                        <div class="section-header">
+                            <i class="fas fa-eye section-icon"></i>
+                            <h3 class="section-title">Email Preview</h3>
+                        </div>
+
+                        <div class="preview-card">
+                            <div class="preview-label">
+                                <i class="fas fa-envelope"></i>
+                                Subject Preview
+                            </div>
+                            <div id="subjectPreview" class="preview-content">
+                                Subject will be generated automatically
+                            </div>
+                        </div>
+
+                        <div class="preview-card">
+                            <div class="preview-label">
+                                <i class="fas fa-file-alt"></i>
+                                Body Preview
+                            </div>
+                            <div id="bodyPreview" class="preview-content">
+                                Email body will be generated based on threat type and content selection
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-section">
+        <div class="action-buttons">
+            <button type="button" class="btn btn-secondary" id="previewBtn">
+                <i class="fas fa-eye"></i>
+                Preview Email
+            </button>
+            <button type="submit" class="btn btn-primary" id="sendBtn" form="emailForm">
+                <i class="fas fa-paper-plane"></i>
+                Send Emails
+            </button>
+            <button type="button" class="btn btn-danger" id="stopBtn" style="display: none;">
+                <i class="fas fa-stop"></i>
+                Stop Sending
+            </button>
+        </div>
+    </div>
+
+    <!-- Progress Section -->
+    <div class="progress-section" id="progressSection">
+        <div class="progress-header">
+            <i class="fas fa-tasks"></i>
+            <h3>Sending Progress</h3>
+        </div>
+        <div class="progress-text" id="progressText">Initializing...</div>
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill"></div>
+        </div>
+        <div class="logs-container" id="logs"></div>
+    </div>
+</div>
+
+<script>
+    // Global variables for session and file management
+    let currentSessionId = null;
+    let progressPollingInterval = null;
+    let sessionCheckInterval;
+    let activityTimeout;
+    let isSessionActive = true;
+    let fileCounter = 0;
+    let filesData = [];
+
+    // Enhanced threat information
+    const threatInfo = {
+        malware: "Generates test malware files (EICAR test string) for antivirus testing",
+        clean: "Creates clean, safe files for baseline testing",
+        phishing: "Creates emails with actual phishing links for phishing detection testing",
+        ctp: "Creates emails with regular links for Click-Time Protection URL scanning tests",
+        spam: "Creates spam-like content for spam filter testing",
+        dlp: "Data Loss Prevention - tests for sensitive data detection"
+    };
+
+    // Content type options based on data factories
+    const contentTypes = {
+        malware: {
+            eicar: "EICAR test string - Standard antivirus test file",
+            macro: "Macro-enabled malware for Office documents",
+            generic: "Generic malware URLs",
+            dummy: "Dummy malware content for testing",
+            malwareavrad: "Malware redirect URLs"
+        },
+        phishing: {
+            link: "Real phishing links from threat intelligence",
+            real_phish: "Verified phishing URLs",
+            dummy: "Test phishing URLs",
+            graymail: "Graymail phishing content",
+            hexadecimal: "Hexadecimal encoded phishing URLs"
+        },
+        ctp: {
+            clean: "Clean URLs for baseline testing",
+            ignore: "URLs that should be ignored",
+            allow: "URLs that should be allowed",
+            block: "URLs that should be blocked",
+            malicious: "Malicious URLs for CTP testing",
+            phishing: "Phishing URLs for CTP testing",
+            ip_address: "IP address URLs"
+        },
+        dlp: {
+            pci: "Credit card and payment information",
+            pii: "Personally identifiable information",
+            phi: "Protected health information (HIPAA)",
+            financial: "Financial data and bank information",
+            sox: "SOX compliance financial records",
+            access_control: "Passwords and access credentials",
+            resume: "Resume and personal data",
+            hipaa: "HIPAA regulated medical data",
+            intellectual_property: "Patents and proprietary information",
+            encrypted_content: "Encrypted data and security keys"
+        },
+        spam: {
+            avanan_link: "Standard spam with promotional links",
+            unified_quarantine_link: "Spam for unified quarantine testing"
+        },
+        clean: {
+            business: "Standard clean business content"
+        }
+    };
+
+    // Content type descriptions
+    const contentTypeDescriptions = {
+        // Malware descriptions
+        eicar: "Standard EICAR test string - universally recognized by antivirus software",
+        macro: "Malicious macro content for Word/Excel documents",
+        generic: "Generic malware URLs for web filtering tests",
+        dummy: "Safe dummy malware content for testing",
+        malwareavrad: "Malware redirect URLs with complex routing",
+
+        // Phishing descriptions
+        link: "Real phishing URLs from active threat intelligence feeds",
+        real_phish: "Verified phishing sites targeting credentials",
+        dummy: "Safe test phishing URLs for baseline testing",
+        graymail: "Graymail and promotional phishing content",
+        hexadecimal: "Hexadecimal encoded phishing URLs to test URL parsing",
+
+        // CTP descriptions
+        clean: "Clean, safe URLs for baseline CTP testing",
+        ignore: "URLs that should be ignored by CTP systems",
+        allow: "URLs that should be explicitly allowed",
+        block: "URLs that should be blocked by CTP systems",
+        malicious: "Known malicious URLs for CTP detection testing",
+        phishing: "Phishing URLs for CTP link scanning tests",
+        ip_address: "Raw IP address URLs for CTP testing",
+
+        // DLP descriptions
+        pci: "Credit card numbers, CVV codes, and payment data",
+        pii: "Names, addresses, phone numbers, and personal identifiers",
+        phi: "Medical records, patient data, and health information",
+        financial: "Bank account numbers, routing numbers, and financial data",
+        sox: "SOX compliance financial records and audit documents",
+        access_control: "Passwords, hashes, and access credentials",
+        resume: "Resume data with personal and contact information",
+        hipaa: "HIPAA regulated medical data and DEA numbers",
+        intellectual_property: "Patents, trade secrets, and proprietary information",
+        encrypted_content: "Encrypted data, security keys, and certificates",
+
+        // Spam descriptions
+        avanan_link: "Standard promotional spam with suspicious links",
+        unified_quarantine_link: "Spam content for unified quarantine testing",
+
+        // Clean descriptions
+        business: "Professional business email content"
+    };
+
+    // DOM elements
+    const threatTypeSelect = document.getElementById('threatType');
+    const threatInfoDiv = document.getElementById('threatInfo');
+    const contentTypeGroup = document.getElementById('contentTypeGroup');
+    const contentTypeSelect = document.getElementById('contentType');
+    const contentTypeInfoDiv = document.getElementById('contentTypeInfo');
+    const dlpSection = document.getElementById('dlpSection');
+    const enableCCCheckbox = document.getElementById('enableCC');
+    const enableBCCCheckbox = document.getElementById('enableBCC');
+    const ccGroup = document.getElementById('ccGroup');
+    const bccGroup = document.getElementById('bccGroup');
+    const threatLocationRadios = document.querySelectorAll('input[name="threatLocation"]');
+    const fileTypeGroup = document.getElementById('fileTypeGroup');
+    const attachmentModeRadios = document.querySelectorAll('input[name="attachmentMode"]');
+    const singleFileConfig = document.getElementById('singleFileConfig');
+    const multipleFilesConfig = document.getElementById('multipleFilesConfig');
+    const compressFileCheckbox = document.getElementById('compressFile');
+    const compressionTypeGroup = document.getElementById('compressionTypeGroup');
+    const compressAllFilesCheckbox = document.getElementById('compressAllFiles');
+    const globalCompressionTypeGroup = document.getElementById('globalCompressionTypeGroup');
+    const addFileBtn = document.getElementById('addFileBtn');
+    const filesList = document.getElementById('filesList');
+    const form = document.getElementById('emailForm');
+    const previewBtn = document.getElementById('previewBtn');
+    const sendBtn = document.getElementById('sendBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const progressSection = document.getElementById('progressSection');
+    const progressText = document.getElementById('progressText');
+    const progressFill = document.getElementById('progressFill');
+    const logs = document.getElementById('logs');
+
+    // Initialize page
+    document.addEventListener('DOMContentLoaded', function () {
+        console.log('🔍 Frontend: Initializing enhanced email testing page...');
+
+        // Set up event listeners
+        setupEventListeners();
+
+        // Load session data
+        startSessionMonitoring();
+
+        // Check email system status
+        checkEmailSystemStatus();
+
+        // Initialize preview
+        updatePreview();
+
+        // Initialize DLP direction handling
+        handleDlpDirectionChange();
+    });
+
+    function setupEventListeners() {
+        // Form event listeners
+        threatTypeSelect.addEventListener('change', handleThreatTypeChange);
+        contentTypeSelect.addEventListener('change', handleContentTypeChange);
+        enableCCCheckbox.addEventListener('change', toggleCCGroup);
+        enableBCCCheckbox.addEventListener('change', toggleBCCGroup);
+        compressFileCheckbox.addEventListener('change', toggleCompressionType);
+        compressAllFilesCheckbox.addEventListener('change', toggleGlobalCompressionType);
+        addFileBtn.addEventListener('click', addNewFile);
+
+        attachmentModeRadios.forEach(radio => {
+            radio.addEventListener('change', handleAttachmentModeChange);
+        });
+
+        threatLocationRadios.forEach(radio => {
+            radio.addEventListener('change', handleLocationChange);
+        });
+
+        // DLP direction change handler
+        document.querySelectorAll('input[name="dlpDirection"]').forEach(radio => {
+            radio.addEventListener('change', handleDlpDirectionChange);
+        });
+
+        // SMTP Test button
+        document.getElementById('testSmtpBtn')?.addEventListener('click', testSmtpConnection);
+
+        // Button event listeners
+        previewBtn.addEventListener('click', previewEmail);
+        form.addEventListener('submit', handleFormSubmit);
+        stopBtn.addEventListener('click', stopSending);
+
+        // Update preview when form changes
+        document.querySelectorAll('input, select, textarea').forEach(element => {
+            element.addEventListener('change', updatePreview);
+            element.addEventListener('input', updatePreview);
+        });
+    }
+
+    // Session Management Functions
+    function startSessionMonitoring() {
+        sessionCheckInterval = setInterval(checkSession, 30000);
+
+        // Track user activity
+        document.addEventListener('mousemove', trackActivity);
+        document.addEventListener('keypress', trackActivity);
+        document.addEventListener('click', trackActivity);
+        document.addEventListener('scroll', trackActivity);
+
+        // Initial session check
+        checkSession();
+    }
+
+    function trackActivity() {
+        if (!isSessionActive) return;
+
+        clearTimeout(activityTimeout);
+        activityTimeout = setTimeout(() => {
+            fetch('/email-testing/activity')
+                    .then(response => response.json())
+                    .catch(error => console.error('Activity tracking failed:', error));
+        }, 1000);
+    }
+
+    function checkSession() {
+        fetch('/email-testing/check_session')
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.authenticated) {
+                        isSessionActive = false;
+                        clearInterval(sessionCheckInterval);
+                        if (data.message === 'Session expired') {
+                            alert('Your session has expired due to inactivity. You will be redirected to the login page.');
+                        }
+                        window.location.href = '/email-testing/login';
+                    } else {
+                        updateSessionTimer(data.time_remaining);
+                        updateUsageInfo(data);
+                    }
+                })
+                .catch(error => {
+                    console.error('Session check failed:', error);
+                    window.location.href = '/email-testing/login';
+                });
+    }
+
+    function updateSessionTimer(timeRemaining) {
+        const minutes = Math.floor(timeRemaining / 60);
+        const seconds = Math.floor(timeRemaining % 60);
+        const formattedTime = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+        const timerElement = document.getElementById('timeRemaining');
+        if (timerElement) {
+            timerElement.textContent = formattedTime;
+
+            const timerContainer = document.getElementById('sessionTimer');
+            if (timeRemaining < 60) {
+                timerContainer.style.background = 'rgba(239, 68, 68, 0.8)';
+                timerContainer.style.color = 'white';
+            } else if (timeRemaining < 120) {
+                timerContainer.style.background = 'rgba(245, 158, 11, 0.8)';
+                timerContainer.style.color = 'white';
+            } else {
+                timerContainer.style.background = 'rgba(255, 255, 255, 0.2)';
+                timerContainer.style.color = 'white';
+            }
+        }
+    }
+
+    function updateUsageInfo(sessionData) {
+        const userElement = document.getElementById('currentUser');
+        const roleElement = document.getElementById('userRole');
+        const usageElement = document.getElementById('messageUsage');
+        const limitElement = document.getElementById('messageLimit');
+        const usageInfoContainer = document.getElementById('usageInfo');
+
+        if (userElement && sessionData.username) {
+            userElement.textContent = sessionData.username;
+        }
+
+        if (roleElement && sessionData.role) {
+            roleElement.textContent = sessionData.role;
+            roleElement.className = `role-badge ${sessionData.role}`;
+
+            const icon = roleElement.querySelector('i');
+            if (icon) {
+                icon.className = sessionData.role === 'admin' ? 'fas fa-crown' : 'fas fa-user';
+            }
+        }
+
+        if (usageElement && sessionData.message_usage !== undefined) {
+            usageElement.textContent = sessionData.message_usage;
+        }
+
+        if (limitElement && sessionData.message_limit !== undefined) {
+            const displayLimit = sessionData.message_limit === 'unlimited' ? '∞' : sessionData.message_limit;
+            limitElement.textContent = displayLimit;
+        }
+
+        if (usageInfoContainer && sessionData.message_usage !== undefined && sessionData.message_limit !== undefined) {
+            const usage = sessionData.message_usage;
+            const limit = sessionData.message_limit;
+
+            usageInfoContainer.classList.remove('warning', 'danger');
+
+            if (limit !== 'unlimited') {
+                const usagePercentage = (usage / limit) * 100;
+                if (usagePercentage >= 90) {
+                    usageInfoContainer.classList.add('danger');
+                } else if (usagePercentage >= 75) {
+                    usageInfoContainer.classList.add('warning');
+                }
+            }
+        }
+    }
+
+    function logout() {
+        if (confirm('Are you sure you want to logout?')) {
+            isSessionActive = false;
+            clearInterval(sessionCheckInterval);
+            window.location.href = '/email-testing/logout';
+        }
+    }
+
+    // Email System Status Check
+    async function checkEmailSystemStatus() {
+        try {
+            const response = await fetch('/email-testing/debug/email-system-status');
+            if (response.ok) {
+                const data = await response.json();
+                const container = document.getElementById('systemInfoContainer');
+
+                let systemMessage = '';
+                let alertClass = 'system-info';
+
+                if (data.complex_framework_available) {
+                    systemMessage = '<i class="fas fa-check-circle"></i> <strong>Complex Email Framework Active:</strong> Advanced threat generation with real malware, sophisticated attachments, and comprehensive security testing capabilities.';
+                } else if (data.simple_email_available) {
+                    systemMessage = '<i class="fas fa-info-circle"></i> <strong>Simple Email System Active:</strong> Basic email testing with standard threat types. Advanced features may be limited.';
+                    alertClass = 'alert alert-warning';
+                } else {
+                    systemMessage = '<i class="fas fa-exclamation-triangle"></i> <strong>Email System Unavailable:</strong> Email sending functionality is not available. Please check server configuration.';
+                    alertClass = 'alert alert-error';
+                }
+
+                container.innerHTML = `<div class="${alertClass}">${systemMessage}</div>`;
+            }
+        } catch (error) {
+            console.log('Could not check email system status');
+        }
+    }
+
+    // Threat Configuration Functions
+    function handleThreatTypeChange() {
+        const selectedThreat = threatTypeSelect.value;
+
+        if (selectedThreat) {
+            threatInfoDiv.textContent = threatInfo[selectedThreat];
+            threatInfoDiv.classList.add('show');
+
+            contentTypeGroup.classList.add('show');
+            populateContentTypes(selectedThreat);
+
+            document.getElementById('threatSection').classList.add('active');
+        } else {
+            threatInfoDiv.classList.remove('show');
+            contentTypeGroup.classList.remove('show');
+            contentTypeInfoDiv.classList.remove('show');
+            document.getElementById('threatSection').classList.remove('active');
+        }
+
+        // Show/hide DLP section
+        if (selectedThreat === 'dlp') {
+            dlpSection.classList.add('show');
+        } else {
+            dlpSection.classList.remove('show');
+        }
+
+        updatePreview();
+    }
+
+    function populateContentTypes(threatType) {
+        contentTypeSelect.innerHTML = '<option value="">Select Content Type</option>';
+
+        const types = contentTypes[threatType] || {};
+
+        Object.keys(types).forEach(key => {
+            const option = document.createElement('option');
+            option.value = key;
+            option.textContent = `${key.charAt(0).toUpperCase() + key.slice(1)} - ${types[key]}`;
+            contentTypeSelect.appendChild(option);
+        });
+
+        contentTypeSelect.value = '';
+        contentTypeInfoDiv.classList.remove('show');
+    }
+
+    function handleContentTypeChange() {
+        const selectedContentType = contentTypeSelect.value;
+
+        if (selectedContentType && contentTypeDescriptions[selectedContentType]) {
+            contentTypeInfoDiv.textContent = contentTypeDescriptions[selectedContentType];
+            contentTypeInfoDiv.classList.add('show');
+        } else {
+            contentTypeInfoDiv.classList.remove('show');
+        }
+
+        updatePreview();
+    }
+
+    // DLP Direction Functions
+    function handleDlpDirectionChange() {
+        const direction = document.querySelector('input[name="dlpDirection"]:checked')?.value;
+        const senderConfig = document.getElementById('dlpSenderConfig');
+        const incomingInfo = document.getElementById('dlpIncomingInfo');
+        const outgoingInfo = document.getElementById('dlpOutgoingInfo');
+        const sesNotice = document.getElementById('dlpSesNotice');
+
+        if (direction === 'outgoing') {
+            // Show sender configuration for outgoing DLP
+            senderConfig.style.display = 'block';
+            incomingInfo.style.display = 'none';
+            outgoingInfo.style.display = 'block';
+            sesNotice.style.display = 'none';
+
+            // Make fields required
+            document.getElementById('dlpSenderEmail').required = true;
+            document.getElementById('dlpSenderPassword').required = true;
+
+        } else {
+            // Hide sender configuration for incoming DLP
+            senderConfig.style.display = 'none';
+            incomingInfo.style.display = 'block';
+            outgoingInfo.style.display = 'none';
+            sesNotice.style.display = 'block';
+
+            // Make fields not required
+            document.getElementById('dlpSenderEmail').required = false;
+            document.getElementById('dlpSenderPassword').required = false;
+        }
+
+        updatePreview();
+    }
+
+    // SMTP Test function
+    async function testSmtpConnection() {
+        const email = document.getElementById('dlpSenderEmail').value;
+        const password = document.getElementById('dlpSenderPassword').value;
+        const provider = document.getElementById('dlpProvider').value;
+
+        if (!email || !password) {
+            alert('Please enter email and password first');
+            return;
+        }
+
+        const testBtn = document.getElementById('testSmtpBtn');
+        const originalText = testBtn.innerHTML;
+        testBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Testing...';
+        testBtn.disabled = true;
+
+        try {
+            const response = await fetch('/email-testing/api/test-smtp', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    email: email,
+                    password: password,
+                    provider: provider
+                })
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                showAlert('✅ SMTP connection successful! You can proceed with outgoing DLP testing.', 'success');
+            } else {
+                showAlert(`❌ SMTP connection failed: ${result.error}`, 'error');
+
+                if (result.tenant_smtp_disabled) {
+                    showAlert('💡 Your organization has disabled SMTP. Contact IT admin or use Incoming DLP testing instead.', 'warning');
+                }
+            }
+
+        } catch (error) {
+            showAlert(`❌ SMTP test error: ${error.message}`, 'error');
+        } finally {
+            testBtn.innerHTML = originalText;
+            testBtn.disabled = false;
+        }
+    }
+
+    // UI Toggle Functions
+    function toggleCCGroup() {
+        ccGroup.style.display = enableCCCheckbox.checked ? 'block' : 'none';
+    }
+
+    function toggleBCCGroup() {
+        bccGroup.style.display = enableBCCCheckbox.checked ? 'block' : 'none';
+    }
+
+    function toggleCompressionType() {
+        compressionTypeGroup.style.display = compressFileCheckbox.checked ? 'block' : 'none';
+        updatePreview();
+    }
+
+    function toggleGlobalCompressionType() {
+        globalCompressionTypeGroup.style.display = compressAllFilesCheckbox.checked ? 'block' : 'none';
+        updatePreview();
+    }
+
+    function handleLocationChange() {
+        const selectedLocation = document.querySelector('input[name="threatLocation"]:checked')?.value;
+        if (selectedLocation === 'attachment') {
+            fileTypeGroup.classList.add('show');
+        } else {
+            fileTypeGroup.classList.remove('show');
+        }
+        updatePreview();
+    }
+
+    function handleAttachmentModeChange() {
+        const selectedMode = document.querySelector('input[name="attachmentMode"]:checked')?.value;
+
+        if (selectedMode === 'single') {
+            singleFileConfig.style.display = 'block';
+            multipleFilesConfig.style.display = 'none';
+        } else {
+            singleFileConfig.style.display = 'none';
+            multipleFilesConfig.style.display = 'block';
+
+            if (filesData.length === 0) {
+                addNewFile();
+            }
+        }
+        updatePreview();
+    }
+
+    // Multiple Files Management
+    function addNewFile() {
+        const fileId = ++fileCounter;
+        const threatType = threatTypeSelect.value;
+        const contentType = contentTypeSelect.value;
+
+        if (!threatType || !contentType) {
+            alert('Please select threat type and content type first');
+            return;
+        }
+
+        const fileData = {
+            id: fileId,
+            threatType: threatType,
+            contentType: contentType,
+            fileType: 'pdf',
+            encrypt: false,
+            compress: false,
+            compressionType: 'zip'
+        };
+
+        filesData.push(fileData);
+        renderFilesList();
+        updatePreview();
+    }
+
+    function removeFile(fileId) {
+        filesData = filesData.filter(file => file.id !== fileId);
+        renderFilesList();
+        updatePreview();
+    }
+
+    function renderFilesList() {
+        filesList.innerHTML = '';
+
+        filesData.forEach(file => {
+            const fileItem = document.createElement('div');
+            fileItem.className = 'file-item';
+            fileItem.innerHTML = `
+                    <div class="file-item-header">
+                        <div class="file-item-title">
+                            <i class="fas fa-file"></i>
+                            File ${file.id}
+                        </div>
+                        <button type="button" class="btn-remove-file" onclick="removeFile(${file.id})">
+                            <i class="fas fa-times"></i>
+                            Remove
+                        </button>
+                    </div>
+
+                    <div style="background: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 8px; padding: 12px; margin-bottom: 10px; font-size: 0.9rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px;">
+                            <span style="font-weight: 500; color: var(--text-secondary);">Threat:</span>
+                            <span style="color: var(--text-primary); font-weight: 600;">${file.threatType}:${file.contentType}</span>
+                        </div>
+                    </div>
+
+                    <div class="file-item-config">
+                        <div class="form-group">
+                            <label class="form-label">File Type</label>
+                            <select class="form-input" onchange="updateFileData(${file.id}, 'fileType', this.value)">
+                                <option value="pdf" ${file.fileType === 'pdf' ? 'selected' : ''}>📄 PDF</option>
+                                <option value="word" ${file.fileType === 'word' ? 'selected' : ''}>📝 Word</option>
+                                <option value="excel" ${file.fileType === 'excel' ? 'selected' : ''}>📊 Excel</option>
+                                <option value="txt" ${file.fileType === 'txt' ? 'selected' : ''}>📋 Text</option>
+                                <option value="zip" ${file.fileType === 'zip' ? 'selected' : ''}>🗜️ ZIP</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group" style="display: ${file.compress ? 'block' : 'none'};">
+                            <label class="form-label">Compression</label>
+                            <select class="form-input" onchange="updateFileData(${file.id}, 'compressionType', this.value)">
+                                <option value="zip" ${file.compressionType === 'zip' ? 'selected' : ''}>🗜️ ZIP</option>
+                                <option value="rar" ${file.compressionType === 'rar' ? 'selected' : ''}>📦 RAR</option>
+                                <option value="ace" ${file.compressionType === 'ace' ? 'selected' : ''}>📁 ACE</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="file-item-options">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="encrypt_${file.id}" ${file.encrypt ? 'checked' : ''}
+                                   onchange="updateFileData(${file.id}, 'encrypt', this.checked)">
+                            <label for="encrypt_${file.id}">
+                                <i class="fas fa-lock"></i>
+                                Encrypt
+                            </label>
+                        </div>
+
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="compress_${file.id}" ${file.compress ? 'checked' : ''}
+                                   onchange="updateFileData(${file.id}, 'compress', this.checked); renderFilesList();">
+                            <label for="compress_${file.id}">
+                                <i class="fas fa-compress"></i>
+                                Compress
+                            </label>
+                        </div>
+                    </div>
+                `;
+            filesList.appendChild(fileItem);
+        });
+    }
+
+    function updateFileData(fileId, property, value) {
+        const file = filesData.find(f => f.id === fileId);
+        if (file) {
+            file[property] = value;
+            updatePreview();
+        }
+    }
+
+    // Preview Functions
+    function updatePreview() {
+        const threatType = threatTypeSelect.value;
+        const contentType = contentTypeSelect.value;
+        const location = document.querySelector('input[name="threatLocation"]:checked')?.value;
+        const attachmentMode = document.querySelector('input[name="attachmentMode"]:checked')?.value;
+        const dlpDirection = document.querySelector('input[name="dlpDirection"]:checked')?.value;
+
+        let subjectPreview = 'Subject will be generated automatically';
+        let bodyPreview = 'Email body will be generated based on threat type and content selection';
+
+        if (threatType && contentType && location) {
+            const timestamp = new Date().toISOString().slice(0, 19).replace(/[-:]/g, '');
+
+            if (location === 'subject') {
+                subjectPreview = `AUTO_${threatType.toUpperCase()}_${timestamp} Generated from: ${threatType}:subject_${contentType}`;
+            } else {
+                subjectPreview = `AUTO_test_email_${timestamp}`;
+            }
+
+            if (location === 'body') {
+                const contentDescription = contentTypeDescriptions[contentType] || contentType;
+                bodyPreview = `Email body with ${threatType} content: ${contentDescription} (Format: ${threatType}:body_${contentType})`;
+            } else if (location === 'attachment') {
+                if (attachmentMode === 'single') {
+                    const fileType = document.getElementById('fileType').value;
+                    const contentDescription = contentTypeDescriptions[contentType] || contentType;
+                    const encryptFile = document.getElementById('encryptFile').checked;
+                    const compressFile = document.getElementById('compressFile').checked;
+                    const compressionType = document.getElementById('compressionType').value;
+
+                    let attachmentDescription = `${threatType} ${contentType} attachment (.${fileType})`;
+
+                    if (encryptFile) {
+                        attachmentDescription += ' [ENCRYPTED]';
+                    }
+
+                    if (compressFile) {
+                        attachmentDescription += ` [COMPRESSED: ${compressionType.toUpperCase()}]`;
+                    }
+
+                    bodyPreview = `Standard email body with ${attachmentDescription}: ${contentDescription}`;
+                } else {
+                    const fileCount = filesData.length;
+                    const compressAllFiles = document.getElementById('compressAllFiles').checked;
+                    const encryptFinalArchive = document.getElementById('encryptFinalArchive').checked;
+                    const globalCompressionType = document.getElementById('globalCompressionType').value;
+
+                    let attachmentDescription = `${fileCount} files`;
+
+                    if (fileCount > 0) {
+                        const fileTypes = [...new Set(filesData.map(f => f.fileType))].join(', ');
+                        attachmentDescription += ` (${fileTypes})`;
+
+                        const encryptedCount = filesData.filter(f => f.encrypt).length;
+                        const compressedCount = filesData.filter(f => f.compress).length;
+
+                        if (encryptedCount > 0) {
+                            attachmentDescription += ` [${encryptedCount} encrypted]`;
+                        }
+
+                        if (compressedCount > 0) {
+                            attachmentDescription += ` [${compressedCount} compressed individually]`;
+                        }
+
+                        if (compressAllFiles) {
+                            attachmentDescription += ` [ALL COMPRESSED: ${globalCompressionType.toUpperCase()}]`;
+                        }
+
+                        if (encryptFinalArchive) {
+                            attachmentDescription += ' [FINAL ARCHIVE ENCRYPTED]';
+                        }
+                    }
+
+                    bodyPreview = `Standard email body with ${attachmentDescription}`;
+                }
+            } else {
+                bodyPreview = 'Standard email body with threat content in subject line';
+            }
+
+            // Add DLP direction info
+            if (threatType === 'dlp' && dlpDirection) {
+                bodyPreview += ` [${dlpDirection.toUpperCase()} DLP Testing]`;
+                if (dlpDirection === 'incoming') {
+                    bodyPreview += ' - Simulating external threat via SES';
+                } else {
+                    bodyPreview += ' - Using organizational SMTP sender';
+                }
+            }
+        } else if (threatType && location) {
+            bodyPreview = `Select a content type to see ${threatType} preview`;
+        }
+
+        document.getElementById('subjectPreview').textContent = subjectPreview;
+        document.getElementById('bodyPreview').textContent = bodyPreview;
+    }
+
+    // Form Data Collection and Validation
+    function collectFormData() {
+        const attachmentMode = document.querySelector('input[name="attachmentMode"]:checked')?.value;
+
+        const baseData = {
+            toRecipients: document.getElementById('toRecipients').value.trim(),
+            ccRecipients: document.getElementById('ccRecipients').value.trim(),
+            bccRecipients: document.getElementById('bccRecipients').value.trim(),
+            threatType: document.getElementById('threatType').value,
+            contentType: document.getElementById('contentType').value,
+            threatLocation: document.querySelector('input[name="threatLocation"]:checked')?.value,
+            attachmentMode: attachmentMode,
+            messageCount: parseInt(document.getElementById('messageCount').value),
+            delayBetween: parseFloat(document.getElementById('delayBetween').value),
+            enableThreading: document.getElementById('enableThreading').checked,
+            threadCount: parseInt(document.getElementById('threadCount').value),
+            dlpDirection: document.querySelector('input[name="dlpDirection"]:checked')?.value,
+            dlpSenderEmail: document.getElementById('dlpSenderEmail').value.trim(),
+            dlpSenderPassword: document.getElementById('dlpSenderPassword').value,
+            dlpProvider: document.getElementById('dlpProvider').value
+        };
+
+        if (attachmentMode === 'single') {
+            baseData.fileType = document.getElementById('fileType').value;
+            baseData.encryptFile = document.getElementById('encryptFile').checked;
+            baseData.compressFile = document.getElementById('compressFile').checked;
+            baseData.compressionType = document.getElementById('compressionType').value;
+        } else {
+            baseData.filesData = filesData;
+            baseData.compressAllFiles = document.getElementById('compressAllFiles').checked;
+            baseData.globalCompressionType = document.getElementById('globalCompressionType').value;
+            baseData.encryptFinalArchive = document.getElementById('encryptFinalArchive').checked;
+        }
+
+        return baseData;
+    }
+
+    function validateForm(formData) {
+        if (!formData.toRecipients) {
+            alert('Please enter at least one recipient email address.');
+            return false;
+        }
+
+        if (!formData.threatType) {
+            alert('Please select a threat type.');
+            return false;
+        }
+
+        if (!formData.contentType) {
+            alert('Please select a content type.');
+            return false;
+        }
+
+        if (!formData.threatLocation) {
+            alert('Please select where to place the threat content.');
+            return false;
+        }
+
+        // DLP-specific validation
+        if (formData.threatType === 'dlp') {
+            if (!formData.dlpDirection) {
+                alert('Please select DLP testing direction (Incoming or Outgoing).');
+                return false;
+            }
+
+            if (formData.dlpDirection === 'outgoing') {
+                if (!formData.dlpSenderEmail || !formData.dlpSenderPassword) {
+                    alert('Outgoing DLP testing requires organizational email credentials.');
+                    return false;
+                }
+            }
+        }
+
+        // Message limits validation
+        const messageCount = formData.messageCount;
+        const currentUsageElement = document.getElementById('messageUsage');
+        const messageLimitElement = document.getElementById('messageLimit');
+
+        if (!currentUsageElement || !messageLimitElement) {
+            console.error('Usage info elements not found');
+            alert('Session information not loaded. Please refresh the page.');
+            return false;
+        }
+
+        const currentUsageText = currentUsageElement.textContent;
+        const messageLimitText = messageLimitElement.textContent;
+
+        if (currentUsageText === '0' && messageLimitText === '0') {
+            console.warn('Session data not loaded yet, checking server...');
+            checkSession();
+            if (!confirm('Session information is still loading. Continue anyway? (Server will also validate limits)')) {
+                return false;
+            }
+            return true;
+        }
+
+        const currentUsage = parseInt(currentUsageText) || 0;
+        const messageLimit = messageLimitText;
+
+        if (messageLimit !== '∞' && messageLimit !== 'unlimited') {
+            const limit = parseInt(messageLimit) || 0;
+
+            if (limit === 0) {
+                console.error('Invalid limit detected', {limit, messageLimit});
+                alert('Invalid user limits detected. Please contact administrator or refresh the page.');
+                return false;
+            }
+
+            if (currentUsage + messageCount > limit) {
+                const remaining = Math.max(0, limit - currentUsage);
+                alert(`Message limit exceeded! You can send ${remaining} more messages (limit: ${limit}).`);
+                return false;
+            }
+        }
+
+        // Attachment-specific validation
+        if (formData.threatLocation === 'attachment') {
+            if (formData.attachmentMode === 'multiple') {
+                if (!formData.filesData || formData.filesData.length === 0) {
+                    alert('Please add at least one file for multiple files mode.');
+                    return false;
+                }
+
+                for (let i = 0; i < formData.filesData.length; i++) {
+                    const file = formData.filesData[i];
+                    if (!file.fileType || !file.threatType || !file.contentType) {
+                        alert(`File ${i + 1} has missing required fields.`);
+                        return false;
+                    }
+                }
+            }
+        }
+
+        if (formData.messageCount > 1000) {
+            alert('Maximum 1000 messages allowed for testing purposes.');
+            return false;
+        }
+
+        return true;
+    }
+
+    // Enhanced error handling for SMTP errors
+    function handleSmtpError(result) {
+        if (result.tenant_smtp_disabled) {
+            // Show special message for tenant SMTP disabled
+            const alertHtml = `
+                <div class="alert alert-warning" style="margin: 20px 0;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>Organization SMTP Disabled</strong><br>
+                    Your organization has disabled SMTP authentication for security reasons.<br><br>
+
+                    <strong>Options:</strong><br>
+                    1. <strong>Contact IT Admin</strong> to enable SMTP for your tenant<br>
+                    2. <strong>Use Personal Gmail</strong> instead of organizational email<br>
+                    3. <strong>Use Incoming DLP Testing</strong> (same DLP content, different sender)<br><br>
+
+                    <button onclick="switchToIncomingDlp()" class="btn btn-primary" style="margin-top: 10px;">
+                        <i class="fas fa-arrow-down"></i> Switch to Incoming DLP Testing
+                    </button>
+
+                    <a href="https://aka.ms/smtp_auth_disabled" target="_blank" class="btn btn-secondary" style="margin-top: 10px; margin-left: 10px;">
+                        <i class="fas fa-external-link-alt"></i> Microsoft Documentation
+                    </a>
+                </div>
+            `;
+
+            document.getElementById('alertContainer').innerHTML = alertHtml;
+
+        } else {
+            // Regular SMTP error
+            showAlert(`DLP Email Error: ${result.error}`, 'error');
+        }
+    }
+
+    function switchToIncomingDlp() {
+        // Switch to incoming DLP
+        document.getElementById('dlpIncoming').checked = true;
+        handleDlpDirectionChange();
+
+        showAlert('Switched to Incoming DLP testing. This will use AWS SES sender with the same DLP content.', 'success');
+
+        // Clear the alert
+        document.getElementById('alertContainer').innerHTML = '';
+    }
+
+    // Email API Functions
+    async function previewEmail() {
+        const formData = collectFormData();
+        if (!validateForm(formData)) return;
+
+        try {
+            showAlert('Testing configuration...', 'warning');
+
+            const response = await fetch('/email-testing/api/test-config', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    formData: formData
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+
+            const result = await response.json();
+
+            if (result.success) {
+                const preview = result.preview;
+                const previewWindow = window.open('', 'preview', 'width=700,height=900');
+                previewWindow.document.write(`
+                        <html>
+                        <head>
+                            <title>Email Preview</title>
+                            <style>
+                                body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; background: #f8fafc; }
+                                .header { background: linear-gradient(135deg, #1e40af, #3b82f6); color: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; }
+                                .field { margin-bottom: 15px; }
+                                .label { font-weight: 600; color: #1e293b; display: flex; align-items: center; gap: 8px; }
+                                .value { color: #475569; margin-left: 24px; font-family: monospace; background: white; padding: 12px; border-radius: 8px; border: 1px solid #e2e8f0; }
+                                .threat-warning { background: linear-gradient(135deg, #fef3c7, #fde68a); border: 1px solid #f59e0b; padding: 16px; border-radius: 12px; margin: 15px 0; }
+                                .threat-details { background: #f8fafc; border: 1px solid #e2e8f0; padding: 16px; border-radius: 8px; margin: 10px 0; }
+                                .body-preview { border: 1px solid #e2e8f0; padding: 20px; margin-top: 15px; background: white; max-height: 300px; overflow-y: auto; border-radius: 8px; }
+                                .close-btn { background: linear-gradient(135deg, #6366f1, #8b5cf6); color: white; border: none; padding: 12px 24px; border-radius: 8px; cursor: pointer; font-weight: 600; }
+                                .close-btn:hover { transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+                                .dlp-info { background: linear-gradient(135deg, #dbeafe, #bfdbfe); border: 1px solid #3b82f6; padding: 16px; border-radius: 12px; margin: 15px 0; }
+                            </style>
+                        </head>
+                        <body>
+                            <div class="header">
+                                <h2>📧 Email Preview (Server Generated)</h2>
+                                <p>Review your email configuration before sending</p>
+                            </div>
+
+                            <div class="field">
+                                <div class="label"><i>📧</i> To:</div>
+                                <div class="value">${preview.recipients.join(', ')}</div>
+                            </div>
+                            <div class="field">
+                                <div class="label"><i>👤</i> From:</div>
+                                <div class="value">${preview.sender}</div>
+                            </div>
+                            <div class="field">
+                                <div class="label"><i>📝</i> Subject:</div>
+                                <div class="value">${preview.subject}</div>
+                            </div>
+
+                            ${formData.threatType === 'dlp' ? `
+                        <div class="dlp-info">
+                        <strong>🔒 DLP Testing Configuration:</strong><br>
+                        Direction: <strong>${formData.dlpDirection.toUpperCase()}</strong><br>
+                                ${formData.dlpDirection === 'incoming' ?
+                        'Using AWS SES to simulate external threats' :
+                        `Using organizational SMTP: ${formData.dlpSenderEmail}`
+            }
+        </div>
+            ` : ''}
+
+                            <div class="threat-warning">
+                                <strong>⚠️ Threat Configuration:</strong><br>
+                                <div class="threat-details">
+                                    <pre>${JSON.stringify(preview.threat_details, null, 2)}</pre>
+                                </div>
+                            </div>
+
+                            <div class="field">
+                                <div class="label"><i>📄</i> Body Preview:</div>
+                                <div class="body-preview">${preview.body_preview}</div>
+                            </div>
+
+                            ${preview.attachments > 0 ? `
+                    <div class="field">
+                    <div class="label"><i>📎</i> Attachments:</div>
+                    <div style="border: 1px solid #e2e8f0; padding: 16px; margin-top: 10px; background: #f8fafc; border-radius: 8px;">
+                    📎 ${preview.attachments} attachment(s) will be included
+                                    </div>
+                                </div>
+                            `
+        :
+            ''
+        }
+
+        <div style="margin-top: 30px; padding: 20px; background: linear-gradient(135deg, #dbeafe, #bfdbfe); border-radius: 12px;">
+            <strong>📊 Campaign Settings:</strong><br>
+            Messages: ${formData.messageCount}<br>
+        Threading: ${formData.enableThreading ? 'Enabled' : 'Disabled'}<br>
+        Delay: ${formData.delayBetween}s between messages
+        </div>
+
+        <div style="text-align: center; margin-top: 30px;">
+            <button onclick="window.close()" class="close-btn">Close Preview</button>
+        </div>
+    </body>
+    </html>
+    `);
+
+    showAlert('Preview generated successfully!', 'success');
+    } else {
+        showAlert(`Configuration Error: ${result.error}`, 'error');
+    }
+
+    } catch (error) {
+        showAlert(`Preview Error: ${error.message}`, 'error');
+    }
+    }
+
+    function handleFormSubmit(e) {
+        e.preventDefault();
+
+        const formData = collectFormData();
+        if (!validateForm(formData)) return;
+
+        if (formData.messageCount > 50) {
+            if (!confirm(`You are about to send ${formData.messageCount} messages. This may take a while and could impact the receiving systems. Continue?`)) {
+                return;
+            }
+        }
+
+        startSending(formData);
+    }
+
+    async function startSending(formData) {
+        sendBtn.style.display = 'none';
+        stopBtn.style.display = 'inline-flex';
+        progressSection.classList.add('show');
+
+        logs.innerHTML = '';
+        addLog('info', 'Initializing email sending process...');
+        updateProgress(0, 'Preparing to send emails...');
+
+        try {
+            const response = await fetch('/email-testing/api/send-emails', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    formData: formData,
+                    messageCount: formData.messageCount,
+                    delayBetween: formData.delayBetween,
+                    enableThreading: formData.enableThreading,
+                    threadCount: formData.threadCount
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+            }
+
+            const result = await response.json();
+
+            if (result.success) {
+                currentSessionId = result.session_id;
+                addLog('success', result.message);
+                startProgressPolling();
+            } else {
+                // Check for SMTP-specific errors
+                handleSmtpError(result);
+                resetUI();
+            }
+
+        } catch (error) {
+            addLog('error', `❌ Error: ${error.message}`);
+            updateProgress(0, 'Failed to start sending');
+            resetUI();
+        }
+    }
+
+    function startProgressPolling() {
+        if (progressPollingInterval) {
+            clearInterval(progressPollingInterval);
+        }
+
+        progressPollingInterval = setInterval(async () => {
+            if (!currentSessionId) {
+                stopProgressPolling();
+                return;
+            }
+
+            try {
+                const response = await fetch(`/email-testing/api/session/${currentSessionId}/progress`);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const progress = await response.json();
+
+                const sentMessages = progress.sent_emails;
+                const failedMessages = progress.failed_emails;
+                const totalCompleted = sentMessages + failedMessages;
+
+                updateProgress(progress.progress_percent,
+                        `Sent: ${sentMessages}, Failed: ${failedMessages}, Total: ${totalCompleted}/${progress.total_emails}`);
+
+                updateLogsFromProgress(progress.logs);
+
+                if (totalCompleted >= progress.total_emails || progress.is_stopped) {
+                    stopProgressPolling();
+
+                    if (progress.is_stopped) {
+                        addLog('info', '✅ All emails processed');
+                    }
+
+                    resetUI();
+                }
+
+            } catch (error) {
+                addLog('error', `Failed to get progress: ${error.message}`);
+                stopProgressPolling();
+                resetUI();
+            }
+        }, 2000);
+    }
+
+    function stopProgressPolling() {
+        if (progressPollingInterval) {
+            clearInterval(progressPollingInterval);
+            progressPollingInterval = null;
+        }
+    }
+
+    function updateLogsFromProgress(serverLogs) {
+        const currentLogCount = logs.children.length;
+
+        for (let i = currentLogCount; i < serverLogs.length; i++) {
+            const log = serverLogs[i];
+            const timestamp = new Date(log.timestamp * 1000).toLocaleTimeString();
+            const logEntry = document.createElement('div');
+            logEntry.className = `log-entry log-${log.level}`;
+            logEntry.textContent = `[${timestamp}] ${log.message}`;
+            logs.appendChild(logEntry);
+        }
+
+        logs.scrollTop = logs.scrollHeight;
+    }
+
+    async function stopSending() {
+        if (!currentSessionId) return;
+
+        addLog('info', '🛑 Requesting stop...');
+
+        try {
+            const response = await fetch(`/email-testing/api/session/${currentSessionId}/stop`, {
+                method: 'POST'
+            });
+
+            if (response.ok) {
+                addLog('info', 'Stop request sent to server');
+            } else {
+                addLog('error', 'Failed to send stop request');
+            }
+        } catch (error) {
+            addLog('error', `Error stopping session: ${error.message}`);
+        }
+    }
+
+    function resetUI() {
+        sendBtn.style.display = 'inline-flex';
+        stopBtn.style.display = 'none';
+        currentSessionId = null;
+        stopProgressPolling();
+    }
+
+    function updateProgress(percentage, text) {
+        progressFill.style.width = `${percentage}%`;
+        progressText.textContent = text;
+    }
+
+    function addLog(type, message) {
+        const timestamp = new Date().toLocaleTimeString();
+        const logEntry = document.createElement('div');
+        logEntry.className = `log-entry log-${type}`;
+        logEntry.textContent = `[${timestamp}] ${message}`;
+        logs.appendChild(logEntry);
+        logs.scrollTop = logs.scrollHeight;
+    }
+
+    function showAlert(message, type) {
+        const alertContainer = document.getElementById('alertContainer');
+        const alert = document.createElement('div');
+        alert.className = `alert alert-${type}`;
+
+        const icon = type === 'success' ? 'check-circle' :
+                type === 'error' ? 'exclamation-triangle' :
+                        'info-circle';
+
+        alert.innerHTML = `
+                <i class="fas fa-${icon}"></i>
+                ${message}
+            `;
+
+        alertContainer.appendChild(alert);
+
+        setTimeout(() => {
+            if (alert.parentNode) {
+                alert.parentNode.removeChild(alert);
+            }
+        }, 5000);
+    }
+
+    // Handle page visibility changes
+    document.addEventListener('visibilitychange', function() {
+        if (document.visibilityState === 'visible' && isSessionActive) {
+            checkSession();
+        }
+    });
+
+    // Cleanup on page unload
+    window.addEventListener('beforeunload', function() {
+        isSessionActive = false;
+        clearInterval(sessionCheckInterval);
+        clearTimeout(activityTimeout);
+    });
+
+    // Make functions available globally for onclick handlers
+    window.removeFile = removeFile;
+    window.updateFileData = updateFileData;
+    window.logout = logout;
+    window.switchToIncomingDlp = switchToIncomingDlp;
+</script>
+</body>
+</html>

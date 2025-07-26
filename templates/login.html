@@ -1,0 +1,886 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Security Testing Platform - Login</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-dark: #1d4ed8;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --background: #f8fafc;
+            --card-bg: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-container {
+            max-width: 500px;
+            width: 100%;
+        }
+
+        .back-to-navigation {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .back-btn {
+            background: rgba(245, 158, 11, 0.8);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .back-btn:hover {
+            background: rgba(245, 158, 11, 1);
+            transform: translateY(-1px);
+        }
+
+        .login-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: var(--shadow-lg);
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.05), transparent);
+            transition: left 0.8s ease;
+        }
+
+        .login-card:hover::before {
+            left: 100%;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .login-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .login-subtitle {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 1rem;
+            transition: all 0.2s ease;
+            background: var(--background);
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .form-input::placeholder {
+            color: var(--text-secondary);
+        }
+
+        .code-input {
+            text-align: center;
+            font-size: 1.4rem;
+            font-weight: bold;
+            letter-spacing: 8px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .login-btn {
+            width: 100%;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .login-btn:hover::before {
+            left: 100%;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+        }
+
+        .login-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            background: #94a3b8;
+        }
+
+        .login-btn:disabled::before {
+            display: none;
+        }
+
+        .alert {
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            color: #065f46;
+            border: 1px solid var(--success-color);
+        }
+
+        .alert-error {
+            background: linear-gradient(135deg, #fee2e2, #fecaca);
+            color: #991b1b;
+            border: 1px solid var(--danger-color);
+        }
+
+        .alert-warning {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            color: #92400e;
+            border: 1px solid var(--warning-color);
+        }
+
+        .alert-info {
+            background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+            color: #1e40af;
+            border: 1px solid var(--primary-color);
+        }
+
+        .two-step-info {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            border: 2px solid var(--primary-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .two-step-info::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="rgba(59,130,246,0.05)"><circle cx="50" cy="50" r="40"/></svg>');
+            background-size: 50px 50px;
+            opacity: 0.3;
+        }
+
+        .two-step-info h3 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .two-step-info p {
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .security-notice {
+            background: linear-gradient(135deg, #f1f5f9, #e2e8f0);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .security-notice h4 {
+            color: var(--text-primary);
+            margin-bottom: 10px;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .security-notice p {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .form-help {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            margin-top: 6px;
+        }
+
+        .start-over-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .start-over-link a {
+            color: var(--primary-color);
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .start-over-link a:hover {
+            background: rgba(37, 99, 235, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-top: 3px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .session-status {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            border: 1px solid var(--primary-color);
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+            text-align: center;
+            display: none;
+        }
+
+        .session-status.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        /* Completely hidden emergency access */
+        .emergency-access {
+            display: none !important;
+        }
+
+        .debug-info {
+            display: none !important;
+        }
+
+        @media (max-width: 768px) {
+            .login-container {
+                max-width: 100%;
+                padding: 0 16px;
+            }
+
+            .login-card {
+                padding: 24px;
+            }
+
+            .login-title {
+                font-size: 1.5rem;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .back-to-navigation {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="back-to-navigation">
+            <a href="/" class="back-btn">
+                <i class="fas fa-arrow-left"></i>
+                BDD Dashboard
+            </a>
+            <a href="/navigation" class="back-btn">
+                <i class="fas fa-compass"></i>
+                Platform Hub
+            </a>
+        </div>
+
+        <!-- Loading Overlay -->
+        <div class="loading-overlay" id="loadingOverlay">
+            <div class="loading-spinner"></div>
+        </div>
+
+        <!-- Session Status (hidden by default) -->
+        <div class="session-status" id="sessionStatus">
+            <i class="fas fa-info-circle"></i>
+            <span id="sessionStatusText">Checking session status...</span>
+        </div>
+
+        <div class="login-card">
+            <div class="login-header">
+                <h1 class="login-title">
+                    <i class="fas fa-shield-alt"></i>
+                    Secure Login
+                </h1>
+                <p class="login-subtitle">Email Security Testing Platform</p>
+            </div>
+
+            <!-- Flash Messages -->
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="alert alert-{{ 'error' if category == 'error' else category }}" id="flashMessage">
+                            <i class="fas fa-{{ 'exclamation-triangle' if category == 'error' else 'info-circle' if category == 'info' else 'check-circle' if category == 'success' else 'exclamation-triangle' }}"></i>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+
+            {% if not show_code_field %}
+            <!-- Step 1: Email and Password -->
+            <div class="two-step-info">
+                <h3>
+                    <i class="fas fa-lock"></i>
+                    Two-Factor Authentication
+                </h3>
+                <p>Enter your credentials to receive a verification code via email</p>
+            </div>
+
+            <form method="POST" id="loginForm" novalidate>
+                <div class="form-group">
+                    <label for="email" class="form-label">
+                        <i class="fas fa-envelope"></i>
+                        Email Address
+                    </label>
+                    <input 
+                        type="email" 
+                        id="email" 
+                        name="email" 
+                        class="form-input" 
+                        placeholder="Enter your email address"
+                        value="{{ request.form.get('email', '') }}"
+                        required
+                        autocomplete="email"
+                        spellcheck="false"
+                    >
+                    <div class="form-help">Use your registered email address</div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password" class="form-label">
+                        <i class="fas fa-key"></i>
+                        Password
+                    </label>
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        class="form-input" 
+                        placeholder="Enter your password"
+                        required
+                        autocomplete="current-password"
+                    >
+                    <div class="form-help">Enter your secure password</div>
+                </div>
+
+                <button type="submit" class="login-btn" id="loginSubmitBtn">
+                    <i class="fas fa-paper-plane"></i>
+                    Send Verification Code
+                </button>
+            </form>
+
+            {% else %}
+            <!-- Step 2: Verification Code -->
+            <div class="two-step-info">
+                <h3>
+                    <i class="fas fa-envelope-open"></i>
+                    Verification Code Sent
+                </h3>
+                <p>Check your email for the 6-digit verification code sent to <strong>{{ email }}</strong></p>
+            </div>
+
+            <form method="POST" id="verificationForm" novalidate>
+                <input type="hidden" name="email" value="{{ email }}">
+                
+                <div class="form-group">
+                    <label for="verification_code" class="form-label">
+                        <i class="fas fa-shield-alt"></i>
+                        Verification Code
+                    </label>
+                    <input 
+                        type="text" 
+                        id="verification_code" 
+                        name="verification_code" 
+                        class="form-input code-input" 
+                        placeholder="000000"
+                        required
+                        maxlength="6"
+                        minlength="6"
+                        pattern="[0-9]{6}"
+                        autocomplete="one-time-code"
+                        autofocus
+                        spellcheck="false"
+                    >
+                    <div class="form-help">Enter the 6-digit code from your email</div>
+                </div>
+
+                <button type="submit" class="login-btn" id="verificationSubmitBtn">
+                    <i class="fas fa-sign-in-alt"></i>
+                    Verify & Login
+                </button>
+            </form>
+
+            <div class="start-over-link">
+                <a href="/email-testing/login">
+                    <i class="fas fa-redo"></i>
+                    Start over
+                </a>
+            </div>
+            {% endif %}
+
+            <div class="security-notice">
+                <h4>
+                    <i class="fas fa-info-circle"></i>
+                    Security Notice
+                </h4>
+                <p>
+                    This platform uses two-factor authentication for enhanced security. 
+                    The verification code expires in 10 minutes and can only be used once.
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Enhanced login form handling to prevent race conditions
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🔧 Enhanced Login System Initialized');
+            
+            const forms = document.querySelectorAll('form');
+            const sessionStatus = document.getElementById('sessionStatus');
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            
+            let isSubmitting = false;
+            let sessionCheckInterval;
+            let loginCheckCount = 0;
+            const maxLoginChecks = 15;
+            
+            // Enhanced session check with recovery
+            function checkLoginStatus() {
+                return fetch('/email-testing/check_session')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.authenticated) {
+                            console.log('✅ User already authenticated, redirecting...');
+                            showSessionStatus('Already logged in, redirecting...', 'success');
+                            
+                            // Add small delay to prevent race condition
+                            setTimeout(() => {
+                                window.location.href = '/email-testing/dashboard';
+                            }, 200);
+                            return true;
+                        } else {
+                            console.log('❌ Not authenticated, staying on login page');
+                            return false;
+                        }
+                    })
+                    .catch(error => {
+                        console.log('🔍 Session check failed (normal for new sessions):', error.message);
+                        return false;
+                    });
+            }
+            
+            function showSessionStatus(message, type) {
+                // Only show session status in development mode
+                if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+                    const statusText = document.getElementById('sessionStatusText');
+                    if (statusText) {
+                        statusText.textContent = message;
+                        sessionStatus.className = `session-status show ${type}`;
+                        
+                        setTimeout(() => {
+                            sessionStatus.classList.remove('show');
+                        }, 3000);
+                    }
+                }
+            }
+            
+            function showLoadingOverlay() {
+                loadingOverlay.style.display = 'flex';
+            }
+            
+            function hideLoadingOverlay() {
+                loadingOverlay.style.display = 'none';
+            }
+            
+            // Prevent multiple form submissions
+            forms.forEach(form => {
+                form.addEventListener('submit', function(e) {
+                    // Prevent multiple submissions
+                    if (isSubmitting) {
+                        e.preventDefault();
+                        console.log('🚫 Prevented duplicate form submission');
+                        return false;
+                    }
+                    
+                    isSubmitting = true;
+                    console.log('📤 Form submission started');
+                    
+                    const submitBtn = this.querySelector('button[type="submit"]');
+                    if (submitBtn) {
+                        submitBtn.disabled = true;
+                        const originalText = submitBtn.innerHTML;
+                        
+                        // Update button text based on form type
+                        const isCodeForm = this.querySelector('input[name="verification_code"]');
+                        const loadingText = isCodeForm ? 
+                            '<i class="fas fa-spinner fa-spin"></i> Verifying...' : 
+                            '<i class="fas fa-spinner fa-spin"></i> Sending Code...';
+                        
+                        submitBtn.innerHTML = loadingText;
+                        
+                        // Show loading overlay for verification step
+                        if (isCodeForm) {
+                            showLoadingOverlay();
+                        }
+                        
+                        // Set timeout to re-enable if something goes wrong
+                        setTimeout(() => {
+                            if (submitBtn.disabled) {
+                                submitBtn.disabled = false;
+                                submitBtn.innerHTML = originalText;
+                                isSubmitting = false;
+                                hideLoadingOverlay();
+                                console.log('🔄 Form submission timeout, re-enabled button');
+                            }
+                        }, 20000); // 20 second timeout
+                    }
+                    
+                    // Add timestamp to form for debugging
+                    const timestampField = document.createElement('input');
+                    timestampField.type = 'hidden';
+                    timestampField.name = 'submit_timestamp';
+                    timestampField.value = Date.now();
+                    this.appendChild(timestampField);
+                });
+            });
+
+            // Auto-format and validate verification code
+            const codeField = document.getElementById('verification_code');
+            if (codeField) {
+                codeField.addEventListener('input', function(e) {
+                    // Only allow numbers
+                    let value = this.value.replace(/[^0-9]/g, '');
+                    this.value = value;
+                    
+                    // Visual feedback for code length
+                    if (value.length === 6) {
+                        this.style.borderColor = 'var(--success-color)';
+                        this.style.boxShadow = '0 0 0 3px rgba(16, 185, 129, 0.1)';
+                    } else {
+                        this.style.borderColor = 'var(--border-color)';
+                        this.style.boxShadow = 'none';
+                    }
+                    
+                    // Auto-submit when 6 digits are entered (with debounce)
+                    if (value.length === 6 && !isSubmitting) {
+                        console.log('🔢 6 digits entered, auto-submitting...');
+                        setTimeout(() => {
+                            if (!isSubmitting && this.value.length === 6) {
+                                console.log('🚀 Auto-submitting verification form');
+                                this.form.submit();
+                            }
+                        }, 500); // Small delay for better UX
+                    }
+                });
+
+                // Focus on code field
+                codeField.focus();
+                
+                // Enhanced session check while on verification step
+                sessionCheckInterval = setInterval(() => {
+                    checkLoginStatus().then(authenticated => {
+                        if (authenticated) {
+                            clearInterval(sessionCheckInterval);
+                        }
+                    });
+                }, 2000); // Check every 2 seconds
+                
+            } else {
+                // Focus on email field for initial login
+                const emailField = document.getElementById('email');
+                if (emailField) {
+                    emailField.focus();
+                }
+            }
+
+            // Check login status on page load
+            checkLoginStatus();
+
+            // Enhanced page visibility handling
+            document.addEventListener('visibilitychange', function() {
+                if (document.visibilityState === 'visible') {
+                    console.log('👁️ Page became visible, checking login status...');
+                    // Check if we're already logged in (handles the refresh case)
+                    setTimeout(() => {
+                        checkLoginStatus();
+                    }, 500);
+                }
+            });
+
+            // Handle browser back button
+            window.addEventListener('popstate', function(event) {
+                console.log('🔙 Browser back button, checking session...');
+                checkLoginStatus();
+            });
+
+            // Clean up interval on page unload
+            window.addEventListener('beforeunload', function() {
+                if (sessionCheckInterval) {
+                    clearInterval(sessionCheckInterval);
+                }
+                hideLoadingOverlay();
+            });
+
+            // Handle form success/error states
+            window.addEventListener('pageshow', function(event) {
+                // Reset form submission state if page is shown from cache
+                if (event.persisted) {
+                    isSubmitting = false;
+                    hideLoadingOverlay();
+                    const submitBtns = document.querySelectorAll('button[type="submit"]');
+                    submitBtns.forEach(btn => {
+                        btn.disabled = false;
+                        if (btn.innerHTML.includes('spinner')) {
+                            const isCodeForm = document.querySelector('input[name="verification_code"]');
+                            btn.innerHTML = isCodeForm ? 
+                                '<i class="fas fa-sign-in-alt"></i> Verify & Login' :
+                                '<i class="fas fa-paper-plane"></i> Send Verification Code';
+                        }
+                    });
+                }
+            });
+
+            // Monitor for login success in case of race condition
+            function monitorLoginSuccess() {
+                if (loginCheckCount >= maxLoginChecks) {
+                    return;
+                }
+                
+                loginCheckCount++;
+                
+                fetch('/email-testing/check_session')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.authenticated && window.location.pathname === '/email-testing/login') {
+                            console.log('🚨 Detected successful login via background check!');
+                            console.log('Session data:', data);
+                            hideLoadingOverlay();
+                            
+                            // Force redirect to dashboard
+                            setTimeout(() => {
+                                window.location.replace('/email-testing/dashboard');
+                            }, 500);
+                        }
+                    })
+                    .catch(e => {
+                        console.log('Background login check failed:', e);
+                    });
+            }
+
+            // Check for successful login every 2 seconds during verification
+            if (codeField) {
+                const loginMonitor = setInterval(() => {
+                    monitorLoginSuccess();
+                    if (loginCheckCount >= maxLoginChecks) {
+                        clearInterval(loginMonitor);
+                        hideLoadingOverlay();
+                    }
+                }, 2000);
+            }
+            
+            // Auto-hide flash messages after 10 seconds
+            const flashMessage = document.getElementById('flashMessage');
+            if (flashMessage) {
+                setTimeout(() => {
+                    flashMessage.style.opacity = '0';
+                    flashMessage.style.transform = 'translateY(-10px)';
+                    setTimeout(() => {
+                        flashMessage.style.display = 'none';
+                    }, 300);
+                }, 10000);
+            }
+            
+            // Handle form success/error states
+            window.addEventListener('pageshow', function(event) {
+                if (event.persisted) {
+                    isSubmitting = false;
+                    hideLoadingOverlay();
+                }
+            });
+            
+            console.log('✅ Enhanced login system ready');
+        });
+
+        // Global error handler for fetch requests
+        window.addEventListener('unhandledrejection', function(event) {
+            console.log('🚨 Unhandled promise rejection:', event.reason);
+            
+            // Auto-recovery attempt
+            setTimeout(() => {
+                if (window.location.pathname === '/email-testing/login') {
+                    fetch('/email-testing/check_session')
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.authenticated) {
+                                console.log('🔄 Auto-recovery: User is actually logged in');
+                                window.location.href = '/email-testing/dashboard';
+                            }
+                        })
+                        .catch(e => console.log('Auto-recovery failed:', e));
+                }
+            }, 1000);
+        });
+    </script>
+</body>
+</html>

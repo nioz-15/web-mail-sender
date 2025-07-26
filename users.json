@@ -1,0 +1,12 @@
+{
+  "credentials": {
+    "nio_z15@hotmail.com": "A123456z@",
+    "ahmad.zidane.1983@hotmail.com": "12345678"
+  },
+  "roles": {
+    "nio_z15@hotmail.com": "admin",
+    "ahmad.zidane.1983@hotmail.com": "user"
+  },
+  "last_updated": "2025-07-18T20:05:49.437451",
+  "version": "1.0"
+}

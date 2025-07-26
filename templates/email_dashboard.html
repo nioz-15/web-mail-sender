@@ -1,0 +1,688 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Security Testing Platform - Dashboard</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-dark: #1d4ed8;
+            --secondary-color: #64748b;
+            --accent-color: #f59e0b;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --danger-color: #ef4444;
+            --background: #f8fafc;
+            --card-bg: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border-color: #e2e8f0;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            min-height: 100vh;
+            color: var(--text-primary);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: calc(100vh - 40px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navigation {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .nav-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .session-bar {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 12px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .session-info {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .session-timer {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .user-stats {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 0.9rem;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.2);
+            padding: 6px 12px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .role-badge {
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .role-admin {
+            background: linear-gradient(135deg, #10b981, #34d399);
+        }
+
+        .role-user {
+            background: linear-gradient(135deg, #3b82f6, #60a5fa);
+        }
+
+        .logout-btn {
+            background: rgba(239, 68, 68, 0.8);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .logout-btn:hover {
+            background: rgba(239, 68, 68, 1);
+            transform: translateY(-1px);
+        }
+
+        .header-section {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            border-radius: 20px;
+            padding: 60px 40px;
+            margin-bottom: 40px;
+            color: white;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="white" opacity="0.1"><polygon points="0,0 1000,0 1000,60 0,100"/></svg>');
+            background-size: cover;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+        }
+
+        .header-title {
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(45deg, #ffffff, #e0e7ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header-subtitle {
+            font-size: 1.4rem;
+            opacity: 0.9;
+            font-weight: 400;
+            margin-bottom: 10px;
+        }
+
+        .header-description {
+            font-size: 1.1rem;
+            opacity: 0.8;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .auth-info {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            text-align: center;
+        }
+
+        .auth-info h3 {
+            color: white;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .auth-info p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        .admin-actions {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .btn-admin {
+            background: rgba(16, 185, 129, 0.8);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-admin:hover {
+            background: rgba(16, 185, 129, 1);
+            transform: translateY(-1px);
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 40px;
+            flex: 1;
+        }
+
+        .info-card {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s ease;
+            border: 1px solid var(--border-color);
+        }
+
+        .info-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            color: white;
+        }
+
+        .ready-icon {
+            background: linear-gradient(135deg, var(--success-color), #34d399);
+        }
+
+        .features-icon {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+        }
+
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .card-content {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .feature-list li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+            padding: 8px 0;
+        }
+
+        .feature-list li i {
+            color: var(--success-color);
+            font-size: 18px;
+            width: 20px;
+        }
+
+        .cta-section {
+            background: var(--card-bg);
+            border-radius: 20px;
+            padding: 50px 40px;
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            margin-bottom: 40px;
+        }
+
+        .cta-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+        }
+
+        .cta-description {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn-primary {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 18px 36px;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .btn-primary:hover::before {
+            left: 100%;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
+        }
+
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 16px;
+            }
+
+            .header-section {
+                padding: 40px 20px;
+            }
+
+            .header-title {
+                font-size: 2.5rem;
+            }
+
+            .content-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .info-card {
+                padding: 24px;
+            }
+
+            .cta-section {
+                padding: 30px 20px;
+            }
+
+            .session-bar {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .session-info {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .user-stats {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .admin-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <div class="navigation">
+            <a href="/" class="nav-btn">
+                <i class="fas fa-home"></i>
+                BDD Dashboard
+            </a>
+            <a href="/navigation" class="nav-btn">
+                <i class="fas fa-compass"></i>
+                Platform Hub
+            </a>
+            <a href="/email-testing/logout" class="nav-btn">
+                <i class="fas fa-sign-out-alt"></i>
+                Logout
+            </a>
+        </div>
+
+        <div class="session-bar">
+            <div class="session-info">
+                <div class="user-stats">
+                    <span><i class="fas fa-user"></i> Welcome, <strong>{{ username }}</strong></span>
+                    <span><i class="fas fa-envelope"></i> {{ email }}</span>
+                    <span class="role-badge {% if role == 'admin' %}role-admin{% else %}role-user{% endif %}">
+                        <i class="fas fa-{% if role == 'admin' %}crown{% else %}user{% endif %}"></i>
+                        {{ role }}
+                    </span>
+                </div>
+                <div class="user-stats">
+                    <div class="stat-item">
+                        <i class="fas fa-paper-plane"></i>
+                        <span>Messages: {{ usage }}/{{ max_messages_display }}</span>
+                    </div>
+                    <div class="session-timer" id="sessionTimer">
+                        <i class="fas fa-clock"></i> Session expires in: <span id="timeRemaining">5:00</span>
+                    </div>
+                </div>
+            </div>
+            <button class="logout-btn" onclick="logout()">
+                <i class="fas fa-sign-out-alt"></i>
+                Logout
+            </button>
+        </div>
+
+        <header class="header-section">
+            <div class="header-content">
+                <div class="auth-info">
+                    <h3>🔐 2FA Authentication Active</h3>
+                    <p>Your session is secured with two-factor authentication</p>
+                    {% if role == 'admin' %}
+                    <div class="admin-actions">
+                        <a href="/email-testing/admin/users" class="btn-admin">
+                            <i class="fas fa-users-cog"></i>
+                            Manage Users
+                        </a>
+                    </div>
+                    {% endif %}
+                </div>
+                <h1 class="header-title">
+                    <i class="fas fa-shield-alt"></i>
+                    Email Security Testing Platform
+                </h1>
+                <p class="header-subtitle">Advanced Threat Simulation & Security Validation</p>
+                <p class="header-description">
+                    Comprehensive email security testing platform for validating email security 
+                    controls and threat detection capabilities across various environments.
+                </p>
+            </div>
+        </header>
+
+        <div class="content-grid">
+            <div class="info-card">
+                <div class="card-header">
+                    <div class="card-icon ready-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3 class="card-title">Platform Ready</h3>
+                </div>
+                <div class="card-content">
+                    <p>The email security testing platform is fully configured and ready for comprehensive security testing.</p>
+                    <br>
+                    <p>Test email security controls including malware detection, 
+                    phishing protection, spam filtering, and data loss prevention systems.</p>
+                    <br>
+                    <p><strong>Your Access Level:</strong> {{ role.title() }} - 
+                    {% if is_unlimited %}Unlimited messages{% else %}Up to {{ max_messages_display }} messages{% endif %}</p>
+                </div>
+            </div>
+
+            <div class="info-card">
+                <div class="card-header">
+                    <div class="card-icon features-icon">
+                        <i class="fas fa-cogs"></i>
+                    </div>
+                    <h3 class="card-title">Key Features</h3>
+                </div>
+                <div class="card-content">
+                    <ul class="feature-list">
+                        <li><i class="fas fa-virus"></i> Real malware and EICAR test files</li>
+                        <li><i class="fas fa-fishing-rod"></i> Actual phishing URLs from threat intel</li>
+                        <li><i class="fas fa-link"></i> Click-time protection testing</li>
+                        <li><i class="fas fa-shield-alt"></i> Data loss prevention validation</li>
+                        <li><i class="fas fa-envelope"></i> Spam filter effectiveness testing</li>
+                        <li><i class="fas fa-chart-line"></i> Real-time progress monitoring</li>
+                        <li><i class="fas fa-check"></i> User management system</li>
+                        <li><i class="fas fa-cog"></i> Role-based access control</li>
+                        {% if role == 'admin' %}
+                        <li><i class="fas fa-users-cog"></i> User management (Admin only)</li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="cta-section">
+            <h2 class="cta-title">Ready to Test Your Email Security?</h2>
+            <p class="cta-description">
+                Launch comprehensive email security tests with realistic threat scenarios 
+                to validate email security systems and detection capabilities.
+            </p>
+            <a href="/email-testing/testing" class="btn-primary">
+                <i class="fas fa-rocket"></i>
+                Start Security Testing
+            </a>
+        </div>
+    </div>
+
+    <script>
+        let sessionCheckInterval;
+        let activityTimeout;
+        let isSessionActive = true;
+
+        function startSessionMonitoring() {
+            // Check session status every 30 seconds
+            sessionCheckInterval = setInterval(checkSession, 30000);
+            
+            // Track user activity
+            document.addEventListener('mousemove', trackActivity);
+            document.addEventListener('keypress', trackActivity);
+            document.addEventListener('click', trackActivity);
+            document.addEventListener('scroll', trackActivity);
+            
+            // Initial session check
+            checkSession();
+        }
+
+        function trackActivity() {
+            if (!isSessionActive) return;
+            
+            // Clear existing timeout
+            clearTimeout(activityTimeout);
+            
+            // Set new timeout to send activity update
+            activityTimeout = setTimeout(() => {
+                fetch('/email-testing/activity')
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'ok') {
+                            console.log('Activity tracked');
+                        }
+                    })
+                    .catch(error => console.error('Activity tracking failed:', error));
+            }, 1000); // Send update 1 second after activity stops
+        }
+
+        function checkSession() {
+            fetch('/email-testing/check_session')
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.authenticated) {
+                        // Session expired or user not authenticated
+                        isSessionActive = false;
+                        clearInterval(sessionCheckInterval);
+                        
+                        if (data.message === 'Session expired') {
+                            alert('Your session has expired due to inactivity. You will be redirected to the login page.');
+                        }
+                        
+                        window.location.href = '/email-testing/login';
+                    } else {
+                        // Update session timer
+                        updateSessionTimer(data.time_remaining);
+                    }
+                })
+                .catch(error => {
+                    console.error('Session check failed:', error);
+                    // On error, redirect to login
+                    window.location.href = '/email-testing/login';
+                });
+        }
+
+        function updateSessionTimer(timeRemaining) {
+            const minutes = Math.floor(timeRemaining / 60);
+            const seconds = Math.floor(timeRemaining % 60);
+            const formattedTime = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            
+            const timerElement = document.getElementById('timeRemaining');
+            if (timerElement) {
+                timerElement.textContent = formattedTime;
+                
+                // Change color based on time remaining
+                const timerContainer = document.getElementById('sessionTimer');
+                if (timeRemaining < 60) {
+                    timerContainer.style.background = 'rgba(239, 68, 68, 0.8)';
+                    timerContainer.style.color = 'white';
+                } else if (timeRemaining < 120) {
+                    timerContainer.style.background = 'rgba(245, 158, 11, 0.8)';
+                    timerContainer.style.color = 'white';
+                } else {
+                    timerContainer.style.background = 'rgba(255, 255, 255, 0.2)';
+                    timerContainer.style.color = 'white';
+                }
+            }
+        }
+
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                isSessionActive = false;
+                clearInterval(sessionCheckInterval);
+                window.location.href = '/email-testing/logout';
+            }
+        }
+
+        // Handle page visibility changes
+        document.addEventListener('visibilitychange', function() {
+            if (document.visibilityState === 'visible' && isSessionActive) {
+                // Page became visible, check session immediately
+                checkSession();
+            }
+        });
+
+        // Start monitoring when page loads
+        window.addEventListener('load', startSessionMonitoring);
+        
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', function() {
+            isSessionActive = false;
+            clearInterval(sessionCheckInterval);
+            clearTimeout(activityTimeout);
+        });
+    </script>
+</body>
+</html>
