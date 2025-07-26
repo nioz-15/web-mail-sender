@@ -98,8 +98,12 @@ EMAIL_USER_USAGE_FILE = 'user_usage.json'
 # Thread-safe file operations
 email_file_lock = threading.Lock()
 
-# dummy Configuration
-
+# aws dummy Configuration
+AWS_SES_CONFIG = {
+    'aws_access_key_id': 'test_access_key',
+    'aws_secret_access_key': 'test_secret',
+    'region_name': 'test_region'
+}
 
 # Session timeout
 EMAIL_SESSION_TIMEOUT = 300  # 5 minutes
